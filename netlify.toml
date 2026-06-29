@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA-подобный фолбэк не нужен: статический экспорт Next.js создаёт
+# отдельные HTML-страницы. Токен Dadata задаётся в Site settings → Environment.

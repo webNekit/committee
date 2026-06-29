@@ -1,3 +1,70 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/consistent-type-imports": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["src/domains/applicant/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/domains/documents/**",
+                  "@/domains/suggestions/**",
+                  "!@/domains/*/types"
+                ],
+                "message": "Домен applicant не должен импортировать внутренности других доменов. Используйте shared/ или публичные types."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/domains/documents/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/domains/applicant/**",
+                  "@/domains/suggestions/**",
+                  "!@/domains/applicant/types"
+                ],
+                "message": "Домен documents может зависеть только от типов applicant (@/domains/applicant/types), не от его UI/хуков."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/domains/suggestions/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/domains/applicant/**", "@/domains/documents/**"],
+                "message": "Домен suggestions не должен зависеть от других доменов."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.test.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ]
 }
