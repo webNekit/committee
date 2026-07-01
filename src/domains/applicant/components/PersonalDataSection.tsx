@@ -119,6 +119,36 @@ export function PersonalDataSection() {
         </Field>
       </div>
 
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Field label="Гражданство" required error={e?.citizenship?.message}>
+          <Input
+            {...register("personal.citizenship")}
+            placeholder="Российская Федерация"
+          />
+        </Field>
+
+        <Field
+          label="Тип населённого пункта"
+          required
+          error={e?.settlementType?.message}
+        >
+          <Controller
+            control={control}
+            name="personal.settlementType"
+            render={({ field }) => (
+              <SegmentedControl
+                value={field.value}
+                onChange={field.onChange}
+                options={[
+                  { value: "city", label: "Город" },
+                  { value: "rural", label: "Сельский" },
+                ]}
+              />
+            )}
+          />
+        </Field>
+      </div>
+
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <Field label="СНИЛС" required error={e?.snils?.message}>
           <Controller

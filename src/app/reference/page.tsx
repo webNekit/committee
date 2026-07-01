@@ -24,11 +24,13 @@ import { FormSection } from "@/shared/components/FormSection";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Badge } from "@/shared/components/ui/badge";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 
 export default function ReferencePage() {
   const specialties = useSpecialties();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
+  const [prof, setProf] = useState(false);
   const [message, setMessage] = useState<{
     type: "ok" | "error";
     text: string;
@@ -41,10 +43,11 @@ export default function ReferencePage() {
   };
 
   const handleAdd = () => {
-    const res = addSpecialty({ code, name });
+    const res = addSpecialty({ code, name, professionalitet: prof });
     if (res.ok) {
       setCode("");
       setName("");
+      setProf(false);
       notify("ok", "Специальность добавлена");
     } else {
       notify("error", res.error ?? "Не удалось добавить");
@@ -124,6 +127,13 @@ export default function ReferencePage() {
               <Plus className="h-4 w-4" /> Добавить
             </Button>
           </div>
+          <label className="mt-2 flex w-fit cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+            <Checkbox
+              checked={prof}
+              onCheckedChange={(c) => setProf(c === true)}
+            />
+            Реализуется в рамках ФП «Профессионалитет»
+          </label>
 
           {/* Таблица */}
           <div className="mt-5 overflow-hidden rounded-lg border">
@@ -143,7 +153,14 @@ export default function ReferencePage() {
                         {s.code}
                       </Badge>
                     </td>
-                    <td className="px-4 py-2">{s.name}</td>
+                    <td className="px-4 py-2">
+                      {s.name}
+                      {s.professionalitet && (
+                        <Badge className="ml-2 align-middle">
+                          Профессионалитет
+                        </Badge>
+                      )}
+                    </td>
                     <td className="px-4 py-2 text-right">
                       <Button
                         type="button"

@@ -13,6 +13,8 @@ import baseData from "./specialties.json";
 export interface Specialty {
   code: string;
   name: string;
+  /** Реализуется в рамках ФП «Профессионалитет» (влияет на бланк заявления). */
+  professionalitet?: boolean;
 }
 
 export const BASE_SPECIALTIES = baseData as Specialty[];
@@ -73,7 +75,10 @@ export function addSpecialty(specialty: Specialty): {
   if (list.some((s) => s.code === code)) {
     return { ok: false, error: `Специальность с кодом ${code} уже есть` };
   }
-  commit([...list, { code, name }]);
+  commit([
+    ...list,
+    { code, name, professionalitet: specialty.professionalitet ?? false },
+  ]);
   return { ok: true };
 }
 
@@ -126,6 +131,7 @@ export function importSpecialtiesJson(json: string): {
     const list: Specialty[] = parsed.map((s) => ({
       code: String(s.code).trim(),
       name: String(s.name).trim(),
+      professionalitet: Boolean(s.professionalitet),
     }));
     commit(list);
     return { ok: true, count: list.length };

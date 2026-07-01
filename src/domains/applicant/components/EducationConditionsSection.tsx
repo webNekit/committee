@@ -35,7 +35,7 @@ export function EducationConditionsSection() {
 
   const specialtyOptions = specialties.map((s) => ({
     value: s.name,
-    label: `${s.code} — ${s.name}`,
+    label: `${s.code} — ${s.name}${s.professionalitet ? " ★" : ""}`,
     keywords: s.code,
   }));
 
@@ -65,6 +65,10 @@ export function EducationConditionsSection() {
                     "educationConditions.specialtyCode",
                     found?.code ?? "",
                     { shouldValidate: true },
+                  );
+                  setValue(
+                    "educationConditions.professionalitet",
+                    found?.professionalitet ?? false,
                   );
                 }}
                 placeholder="Выберите специальность"
@@ -171,6 +175,40 @@ export function EducationConditionsSection() {
                 ]}
               />
             )}
+          />
+        </Field>
+      </div>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Field
+          label="Основание поступления"
+          required
+          error={e?.fundingBasis?.message}
+        >
+          <Controller
+            control={control}
+            name="educationConditions.fundingBasis"
+            render={({ field }) => (
+              <SegmentedControl
+                value={field.value}
+                onChange={field.onChange}
+                options={[
+                  { value: "budget", label: "Бюджет" },
+                  { value: "contract", label: "Договор (платно)" },
+                ]}
+              />
+            )}
+          />
+        </Field>
+
+        <Field
+          label="Дата подачи заявления"
+          required
+          error={e?.applicationDate?.message}
+        >
+          <Input
+            type="date"
+            {...register("educationConditions.applicationDate")}
           />
         </Field>
       </div>

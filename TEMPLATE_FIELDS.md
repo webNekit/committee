@@ -22,10 +22,13 @@
 
 ### Общие
 
-| Плейсхолдер | Значение (пример)          |
-| ----------- | -------------------------- |
-| `{{fio}}`   | Иванов Иван Иванович       |
-| `{{today}}` | 29.06.2026 (дата создания) |
+| Плейсхолдер           | Значение (пример)                           |
+| --------------------- | ------------------------------------------- |
+| `{{fio}}`             | Иванов Иван Иванович                        |
+| `{{today}}`           | 29.06.2026 (дата создания)                  |
+| `{{applicationDate}}` | Дата подачи заявления                       |
+| `{{isAdult}}`         | true, если 18+ на дату подачи (для условий) |
+| `{{isMinor}}`         | true, если несовершеннолетний               |
 
 ### Колледж
 
@@ -39,18 +42,20 @@
 
 ### Личные данные (`personal`)
 
-| Плейсхолдер                  | Значение                  |
-| ---------------------------- | ------------------------- |
-| `{{personal.lastName}}`      | Фамилия                   |
-| `{{personal.firstName}}`     | Имя                       |
-| `{{personal.middleName}}`    | Отчество                  |
-| `{{personal.birthDate}}`     | 01.05.2008                |
-| `{{personal.birthDateLong}}` | 1 мая 2008 г.             |
-| `{{personal.birthPlace}}`    | Место рождения            |
-| `{{personal.gender}}`        | мужской / женский         |
-| `{{personal.snils}}`         | 123-456-789 00            |
-| `{{personal.phone}}`         | +7 (999) 123-45-67        |
-| `{{personal.email}}`         | email (может быть пустым) |
+| Плейсхолдер                   | Значение                          |
+| ----------------------------- | --------------------------------- |
+| `{{personal.lastName}}`       | Фамилия                           |
+| `{{personal.firstName}}`      | Имя                               |
+| `{{personal.middleName}}`     | Отчество                          |
+| `{{personal.birthDate}}`      | 01.05.2008                        |
+| `{{personal.birthDateLong}}`  | 1 мая 2008 г.                     |
+| `{{personal.birthPlace}}`     | Место рождения                    |
+| `{{personal.gender}}`         | мужской / женский                 |
+| `{{personal.citizenship}}`    | Российская Федерация              |
+| `{{personal.settlementType}}` | город / сельский населённый пункт |
+| `{{personal.snils}}`          | 123-456-789 00                    |
+| `{{personal.phone}}`          | +7 (999) 123-45-67                |
+| `{{personal.email}}`          | email (может быть пустым)         |
 
 ### Паспорт и адреса (`passport`)
 
@@ -77,17 +82,18 @@
 
 ### Условия обучения (`conditions`)
 
-| Плейсхолдер                      | Значение                            |
-| -------------------------------- | ----------------------------------- |
-| `{{conditions.specialty}}`       | Название специальности              |
-| `{{conditions.specialtyCode}}`   | Код (09.02.07)                      |
-| `{{conditions.educationForm}}`   | очная / заочная / вечерняя          |
-| `{{conditions.baseEducation}}`   | 9 / 11                              |
-| `{{conditions.foreignLanguage}}` | английский / немецкий / французский |
-| `{{conditions.cipher}}`          | Шифр личного дела                   |
-| `{{conditions.contractNumber}}`  | Номер договора (может быть пустым)  |
-| `{{conditions.enrollmentYear}}`  | Год поступления                     |
-| `{{conditions.fundingBasis}}`    | платная / бюджет                    |
+| Плейсхолдер                       | Значение                                   |
+| --------------------------------- | ------------------------------------------ |
+| `{{conditions.specialty}}`        | Название специальности                     |
+| `{{conditions.specialtyCode}}`    | Код (09.02.07)                             |
+| `{{conditions.educationForm}}`    | очная / заочная / вечерняя                 |
+| `{{conditions.baseEducation}}`    | 9 / 11                                     |
+| `{{conditions.foreignLanguage}}`  | английский / немецкий / французский        |
+| `{{conditions.cipher}}`           | Шифр личного дела                          |
+| `{{conditions.contractNumber}}`   | Номер договора (может быть пустым)         |
+| `{{conditions.enrollmentYear}}`   | Год поступления                            |
+| `{{conditions.fundingBasis}}`     | бюджет / договор                           |
+| `{{conditions.professionalitet}}` | true — специальность ФП «Профессионалитет» |
 
 ### Родители / представители (`parents`)
 
@@ -100,6 +106,26 @@
 | `{{parent1.phone}}`     | Телефон                      |
 | `{{parent1.workplace}}` | Место работы / «Не работает» |
 | `{{parent2.role}}` …    | вторая запись (аналогично)   |
+
+### Заказчик по договору (`representative`)
+
+Заполняется данными представителя, отмеченного галочкой «Заказчик по договору»
+(для несовершеннолетнего). Для совершеннолетнего Заказчик — сам обучающийся
+(используйте плейсхолдеры `personal.*` / `passport.*`).
+
+| Плейсхолдер                               | Значение             |
+| ----------------------------------------- | -------------------- |
+| `{{representative.fullName}}`             | ФИО представителя    |
+| `{{representative.role}}`                 | Мать / Отец / Опекун |
+| `{{representative.birthDate}}`            | Дата рождения        |
+| `{{representative.birthPlace}}`           | Место рождения       |
+| `{{representative.snils}}`                | СНИЛС                |
+| `{{representative.passportSeriesNumber}}` | «1234 567890»        |
+| `{{representative.passportIssuedBy}}`     | Кем выдан            |
+| `{{representative.passportIssuedDate}}`   | Дата выдачи          |
+| `{{representative.registrationAddress}}`  | Адрес регистрации    |
+| `{{representative.phone}}`                | Телефон              |
+| `{{representative.email}}`                | Email                |
 
 Циклом (если в бланке таблица/список родителей):
 

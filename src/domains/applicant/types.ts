@@ -8,6 +8,8 @@ export interface PersonalData {
   birthDate: string; // Дата рождения (ISO, YYYY-MM-DD)
   birthPlace: string; // Место рождения
   gender: "male" | "female"; // Пол
+  citizenship: string; // Гражданство
+  settlementType: "city" | "rural"; // Тип населённого пункта (город/село)
   snils: string; // СНИЛС (формат ___-___-___ __)
   phone: string; // Телефон (+7 (___) ___-__-__)
   email?: string; // Email (необязателен)
@@ -31,6 +33,17 @@ export interface ParentData {
   fullName: string; // ФИО
   phone: string; // Телефон
   workplace?: string; // Место работы
+  // Полные данные для договора (Заказчик), нужны для несовершеннолетнего.
+  isContractCustomer?: boolean; // Этот представитель — Заказчик по договору
+  birthDate?: string; // Дата рождения (ISO)
+  birthPlace?: string; // Место рождения
+  snils?: string; // СНИЛС
+  passportSeries?: string; // Серия паспорта
+  passportNumber?: string; // Номер паспорта
+  passportIssuedBy?: string; // Кем выдан
+  passportIssuedDate?: string; // Дата выдачи (ISO)
+  registrationAddress?: string; // Адрес регистрации
+  email?: string; // Email
 }
 
 /** Сведения о предыдущем образовании. */
@@ -49,8 +62,11 @@ export interface EducationConditions {
   educationForm: "full-time" | "part-time" | "evening"; // Очная/Заочная/Вечерняя
   baseEducation: "9" | "11"; // На базе 9 или 11 классов
   foreignLanguage: "english" | "german" | "french"; // Иностранный язык
+  fundingBasis: "budget" | "contract"; // Основание: бюджет / договор (платно)
+  professionalitet: boolean; // Специальность в рамках ФП «Профессионалитет»
   cipher: string; // Шифр личного дела
   contractNumber?: string; // Номер договора
+  applicationDate: string; // Дата подачи заявления (ISO)
   enrollmentYear: number; // Год поступления
 }
 

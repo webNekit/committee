@@ -12,6 +12,8 @@ function sample(): ApplicantData {
       birthDate: "2008-05-01",
       birthPlace: "г. Волгоград",
       gender: "male",
+      citizenship: "Российская Федерация",
+      settlementType: "city",
       snils: "123-456-789 00",
       phone: "+7 (999) 123-45-67",
       email: "",
@@ -47,8 +49,11 @@ function sample(): ApplicantData {
       educationForm: "full-time",
       baseEducation: "9",
       foreignLanguage: "english",
+      fundingBasis: "budget",
+      professionalitet: false,
       cipher: "ИС-25-001",
       contractNumber: "",
+      applicationDate: "2026-06-20",
       enrollmentYear: 2026,
     },
   };
@@ -79,9 +84,36 @@ describe("buildTemplateData", () => {
     expect(d.parent2.fullName).toBe("");
   });
 
-  it("платная основа при наличии номера договора", () => {
+  it("основание поступления берётся из fundingBasis", () => {
     const data = sample();
-    data.educationConditions.contractNumber = "Д-2026/001";
-    expect(buildTemplateData(data).conditions.fundingBasis).toBe("платная");
+    data.educationConditions.fundingBasis = "contract";
+    expect(buildTemplateData(data).conditions.fundingBasis).toBe("договор");
+  });
+
+  it("совершеннолетие считается на дату подачи", () => {
+    const data = sample();
+    // 01.05.2008 → на 2026-06-20 уже 18 лет.
+    expect(buildTemplateData(data).isAdult).toBe(true);
+    data.personal.birthDate = "2010-05-01"; // 16 лет
+    expect(buildTemplateData(data).isAdult).toBe(false);
+  });
+
+  it("представитель-Заказчик выбирается по флагу", () => {
+    const data = sample();
+    data.parents = [
+      { role: "mother", fullName: "Мать", phone: "", workplace: "" },
+      {
+        role: "father",
+        fullName: "Отец Заказчик",
+        phone: "",
+        workplace: "",
+        isContractCustomer: true,
+        passportSeries: "1111",
+        passportNumber: "222222",
+      },
+    ];
+    const d = buildTemplateData(data);
+    expect(d.representative.fullName).toBe("Отец Заказчик");
+    expect(d.representative.passportSeriesNumber).toBe("1111 222222");
   });
 });

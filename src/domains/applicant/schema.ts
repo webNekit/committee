@@ -27,6 +27,10 @@ export const personalDataSchema = z.object({
   gender: z.enum(["male", "female"], {
     errorMap: () => ({ message: "Выберите пол" }),
   }),
+  citizenship: requiredString("Укажите гражданство"),
+  settlementType: z.enum(["city", "rural"], {
+    errorMap: () => ({ message: "Выберите тип населённого пункта" }),
+  }),
   snils: requiredString("Укажите СНИЛС").regex(
     /^\d{3}-\d{3}-\d{3} \d{2}$/,
     "СНИЛС в формате 123-456-789 00",
@@ -87,6 +91,22 @@ export const parentDataSchema = z.object({
     "Телефон в формате +7 (999) 123-45-67",
   ),
   workplace: z.string().trim().optional().or(z.literal("")),
+  // Полные данные представителя (Заказчик по договору) — необязательны.
+  isContractCustomer: z.boolean().optional(),
+  birthDate: z.string().trim().optional().or(z.literal("")),
+  birthPlace: z.string().trim().optional().or(z.literal("")),
+  snils: z.string().trim().optional().or(z.literal("")),
+  passportSeries: z.string().trim().optional().or(z.literal("")),
+  passportNumber: z.string().trim().optional().or(z.literal("")),
+  passportIssuedBy: z.string().trim().optional().or(z.literal("")),
+  passportIssuedDate: z.string().trim().optional().or(z.literal("")),
+  registrationAddress: z.string().trim().optional().or(z.literal("")),
+  email: z
+    .string()
+    .trim()
+    .email("Некорректный email")
+    .optional()
+    .or(z.literal("")),
 });
 
 export const previousEducationSchema = z.object({
@@ -114,8 +134,16 @@ export const educationConditionsSchema = z.object({
   foreignLanguage: z.enum(["english", "german", "french"], {
     errorMap: () => ({ message: "Выберите иностранный язык" }),
   }),
+  fundingBasis: z.enum(["budget", "contract"], {
+    errorMap: () => ({ message: "Выберите основание поступления" }),
+  }),
+  professionalitet: z.boolean(),
   cipher: requiredString("Укажите шифр личного дела"),
   contractNumber: z.string().trim().optional().or(z.literal("")),
+  applicationDate: requiredString("Укажите дату подачи заявления").refine(
+    (v) => !Number.isNaN(Date.parse(v)),
+    "Некорректная дата",
+  ),
   enrollmentYear: z
     .number({ invalid_type_error: "Укажите год поступления" })
     .int()
