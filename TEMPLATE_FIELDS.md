@@ -127,6 +127,14 @@
 | `{{representative.phone}}`                | Телефон              |
 | `{{representative.email}}`                | Email                |
 
+### Договор: `student` и `customer`
+
+Для договоров: `student` — всегда обучающийся (абитуриент); `customer` — Заказчик
+(совершеннолетний абитуриент — сам; несовершеннолетний — представитель).
+У обоих поля: `fullName`, `birthDate`, `birthPlace`, `snils`, `passportSeries`,
+`passportNumber`, `passportSeriesNumber`, `passportIssuedBy`, `passportIssuedDate`,
+`registrationAddress`, `phone`, `email`.
+
 Циклом (если в бланке таблица/список родителей):
 
 ```

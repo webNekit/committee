@@ -81,8 +81,8 @@ export function DocumentPackButton({
       {pack.status === "idle" && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground">
-            Будет сформировано {pack.steps.length} документов и собран
-            ZIP-архив.
+            Сформируется заявление, согласия и (при платном обучении) договор —
+            в ZIP-архиве.
           </p>
           <div className="flex flex-col gap-2 sm:flex-row">
             {onClear && (

@@ -1,51 +1,88 @@
 import type { ApplicantData } from "@/domains/applicant/types";
-import { generateAnketa } from "./templates/anketa";
-import { generateLichnoeDelo } from "./templates/lichnoe-delo";
-import { generateOpis } from "./templates/opis";
-import { generateRaspiska } from "./templates/raspiska";
-import { generateEkzamenList } from "./templates/ekzamen-list";
 import { generateContract } from "./templating/contracts";
-import type { DocumentId, DocumentTemplate, GeneratedDocument } from "./types";
+import { renderTemplateFromUrl } from "./templating/renderTemplate";
+import type { GeneratedDocument } from "./types";
 
-/** Реестр всех шаблонов комплекта (6 документов). */
-export const DOCUMENT_TEMPLATES: readonly DocumentTemplate[] = [
+/** Согласия — заполняются для всех абитуриентов. */
+const CONSENTS = [
   {
-    id: "anketa",
-    title: "Анкета абитуриента",
-    fileSuffix: "анкета",
-    generate: generateAnketa,
+    id: "consent-pd",
+    title: "Согласие на обработку персональных данных",
+    fileSuffix: "согласие-обработка-ПД",
+    file: "consent-pd.docx",
   },
   {
-    id: "lichnoe-delo",
-    title: "Титульный лист личного дела",
-    fileSuffix: "личное-дело",
-    generate: generateLichnoeDelo,
+    id: "consent",
+    title: "Согласие на обработку персональных данных (расширенное)",
+    fileSuffix: "согласие",
+    file: "consent.docx",
   },
   {
-    id: "opis",
-    title: "Опись документов",
-    fileSuffix: "опись",
-    generate: generateOpis,
+    id: "consent-transfer",
+    title: "Согласие на передачу персональных данных",
+    fileSuffix: "согласие-передача-ПД",
+    file: "consent-transfer.docx",
   },
   {
-    id: "raspiska",
-    title: "Расписка",
-    fileSuffix: "расписка",
-    generate: generateRaspiska,
-  },
-  {
-    id: "ekzamen-list",
-    title: "Экзаменационный лист",
-    fileSuffix: "экзамен-лист",
-    generate: generateEkzamenList,
-  },
-  {
-    id: "dogovor",
-    title: "Договор об образовании",
-    fileSuffix: "договор",
-    generate: generateContract,
+    id: "consent-zp",
+    title: "Согласие (зарплатный проект)",
+    fileSuffix: "согласие-ЗП",
+    file: "consent-zp.docx",
   },
 ] as const;
+
+/** Один документ комплекта: описание + функция генерации содержимого. */
+export interface PackItem {
+  id: string;
+  title: string;
+  fileSuffix: string;
+  produce: () => Promise<Uint8Array>;
+}
+
+/**
+ * План комплекта по данным абитуриента:
+ * - заявление (обычное или «Профессионалитет» — по специальности);
+ * - договор (только при платном обучении, по коду специальности);
+ * - согласия (всегда).
+ */
+export function planPack(data: ApplicantData): PackItem[] {
+  const { professionalitet, fundingBasis } = data.educationConditions;
+  const items: PackItem[] = [];
+
+  const applicationFile = professionalitet
+    ? "application-prof.docx"
+    : "application.docx";
+  items.push({
+    id: "application",
+    title: professionalitet
+      ? "Заявление (Профессионалитет)"
+      : "Заявление о приёме",
+    fileSuffix: "заявление",
+    produce: () =>
+      renderTemplateFromUrl(`/templates/applications/${applicationFile}`, data),
+  });
+
+  if (fundingBasis === "contract") {
+    items.push({
+      id: "contract",
+      title: "Договор об образовании",
+      fileSuffix: "договор",
+      produce: () => generateContract(data),
+    });
+  }
+
+  for (const c of CONSENTS) {
+    items.push({
+      id: c.id,
+      title: c.title,
+      fileSuffix: c.fileSuffix,
+      produce: () =>
+        renderTemplateFromUrl(`/templates/consents/${c.file}`, data),
+    });
+  }
+
+  return items;
+}
 
 /** Безопасное имя для файла (оставляем буквы РУ/EN, цифры, дефис, подчёркивание). */
 const safe = (s: string) => s.replace(/[^a-zA-Zа-яА-ЯёЁ0-9\-_]+/g, "").trim();
@@ -61,27 +98,28 @@ export function buildFileName(data: ApplicantData, suffix: string): string {
 export type DocStatus = "generating" | "done";
 
 /** Колбэк прогресса: вызывается при смене статуса каждого документа. */
-export type ProgressCallback = (id: DocumentId, status: DocStatus) => void;
+export type ProgressCallback = (id: string, status: DocStatus) => void;
 
 /**
- * Генерация всех 6 документов последовательно — чтобы наглядно показывать
+ * Последовательная генерация комплекта — чтобы наглядно показывать
  * этап формирования каждого файла через колбэк прогресса.
  */
 export async function generateAllDocuments(
   data: ApplicantData,
   onProgress?: ProgressCallback,
 ): Promise<GeneratedDocument[]> {
+  const plan = planPack(data);
   const results: GeneratedDocument[] = [];
-  for (const tpl of DOCUMENT_TEMPLATES) {
-    onProgress?.(tpl.id, "generating");
-    const content = await tpl.generate(data);
+  for (const item of plan) {
+    onProgress?.(item.id, "generating");
+    const content = await item.produce();
     results.push({
-      id: tpl.id,
-      title: tpl.title,
-      fileName: buildFileName(data, tpl.fileSuffix),
+      id: item.id,
+      title: item.title,
+      fileName: buildFileName(data, item.fileSuffix),
       content,
     });
-    onProgress?.(tpl.id, "done");
+    onProgress?.(item.id, "done");
   }
   return results;
 }

@@ -1,10 +1,9 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import {
-  buildFileName,
-  DOCUMENT_TEMPLATES,
-  generateAllDocuments,
-} from "./generator";
+import { buildFileName, planPack } from "./generator";
+import { renderDocxTemplate } from "./templating/renderTemplate";
 import type { ApplicantData } from "@/domains/applicant/types";
 
 function sampleApplicant(): ApplicantData {
@@ -48,14 +47,14 @@ function sampleApplicant(): ApplicantData {
       documentNumber: "0001234",
     },
     educationConditions: {
-      specialty: "Информационные системы и программирование",
-      specialtyCode: "09.02.07",
+      specialty: "Юриспруденция",
+      specialtyCode: "40.02.04",
       educationForm: "full-time",
       baseEducation: "9",
       foreignLanguage: "english",
       fundingBasis: "budget",
       professionalitet: false,
-      cipher: "ИС-25-001",
+      cipher: "Ю-25-001",
       contractNumber: "",
       applicationDate: "2026-06-20",
       enrollmentYear: 2026,
@@ -65,8 +64,8 @@ function sampleApplicant(): ApplicantData {
 
 describe("buildFileName", () => {
   it("формирует имя из фамилии, имени и суффикса", () => {
-    expect(buildFileName(sampleApplicant(), "анкета")).toBe(
-      "Иванов_Иван_анкета.docx",
+    expect(buildFileName(sampleApplicant(), "заявление")).toBe(
+      "Иванов_Иван_заявление.docx",
     );
   });
 
@@ -74,18 +73,43 @@ describe("buildFileName", () => {
     const data = sampleApplicant();
     data.personal.lastName = "";
     data.personal.firstName = "";
-    expect(buildFileName(data, "опись")).toBe("Абитуриент_опись.docx");
+    expect(buildFileName(data, "согласие")).toBe("Абитуриент_согласие.docx");
   });
 });
 
-describe("generateAllDocuments", () => {
-  it("генерирует все 6 документов, каждый > 0 байт", async () => {
-    const docs = await generateAllDocuments(sampleApplicant());
-    expect(docs).toHaveLength(DOCUMENT_TEMPLATES.length);
-    expect(docs).toHaveLength(6);
-    for (const doc of docs) {
-      expect(doc.content.byteLength).toBeGreaterThan(0);
-      expect(doc.fileName).toMatch(/\.docx$/);
-    }
-  }, 30_000);
+describe("planPack", () => {
+  it("бюджет: заявление + 4 согласия (без договора)", () => {
+    const ids = planPack(sampleApplicant()).map((p) => p.id);
+    expect(ids).toContain("application");
+    expect(ids).not.toContain("contract");
+    expect(ids.filter((i) => i.startsWith("consent"))).toHaveLength(4);
+  });
+
+  it("платно: добавляется договор", () => {
+    const data = sampleApplicant();
+    data.educationConditions.fundingBasis = "contract";
+    expect(planPack(data).map((p) => p.id)).toContain("contract");
+  });
+
+  it("профессионалитет: вариант заявления «Профессионалитет»", () => {
+    const data = sampleApplicant();
+    data.educationConditions.professionalitet = true;
+    const app = planPack(data).find((p) => p.id === "application");
+    expect(app?.title).toContain("Профессионалитет");
+  });
+});
+
+describe("реальный шаблон договора", () => {
+  it("заполняется, весит > 0 байт, без остаточных плейсхолдеров", () => {
+    const path = join(
+      process.cwd(),
+      "public/templates/contracts/40.02.04.docx",
+    );
+    const buf = readFileSync(path);
+    const out = renderDocxTemplate(buf, sampleApplicant());
+    expect(out.byteLength).toBeGreaterThan(0);
+    // В document.xml не должно остаться незаполненных плейсхолдеров.
+    const text = Buffer.from(out).toString("latin1");
+    expect(text.includes("{{")).toBe(false);
+  });
 });

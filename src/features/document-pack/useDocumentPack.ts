@@ -4,18 +4,15 @@ import { useState } from "react";
 import JSZip from "jszip";
 
 import type { ApplicantData } from "@/domains/applicant/types";
-import {
-  DOCUMENT_TEMPLATES,
-  generateAllDocuments,
-} from "@/domains/documents/generator";
-import type { DocumentId, GeneratedDocument } from "@/domains/documents/types";
+import { generateAllDocuments, planPack } from "@/domains/documents/generator";
+import type { GeneratedDocument } from "@/domains/documents/types";
 import { formatDate } from "@/domains/documents/utils/date-helpers";
 
 export type PackStatus = "idle" | "generating" | "done" | "error";
 export type StepStatus = "pending" | "generating" | "done";
 
 export interface PackStep {
-  id: DocumentId;
+  id: string;
   title: string;
   status: StepStatus;
 }
@@ -40,10 +37,11 @@ function buildZipName(data: ApplicantData): string {
   return `Комплект_${[last, first].filter(Boolean).join("_")}_${date}.zip`;
 }
 
-const initialSteps = (): PackStep[] =>
-  DOCUMENT_TEMPLATES.map((t) => ({
-    id: t.id,
-    title: t.title,
+/** Шаги по плану комплекта для конкретных данных. */
+const stepsFor = (data: ApplicantData): PackStep[] =>
+  planPack(data).map((p) => ({
+    id: p.id,
+    title: p.title,
     status: "pending" as StepStatus,
   }));
 
@@ -61,7 +59,7 @@ function downloadBlob(blob: Blob, name: string) {
 
 export function useDocumentPack(): UseDocumentPackResult {
   const [status, setStatus] = useState<PackStatus>("idle");
-  const [steps, setSteps] = useState<PackStep[]>(initialSteps);
+  const [steps, setSteps] = useState<PackStep[]>([]);
   const [documents, setDocuments] = useState<GeneratedDocument[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [zipBlob, setZipBlob] = useState<Blob | null>(null);
@@ -70,7 +68,7 @@ export function useDocumentPack(): UseDocumentPackResult {
   const generate = async (data: ApplicantData) => {
     setStatus("generating");
     setError(null);
-    setSteps(initialSteps());
+    setSteps(stepsFor(data));
 
     try {
       // 1. Генерация по одному документу с обновлением статуса этапа.
@@ -115,7 +113,7 @@ export function useDocumentPack(): UseDocumentPackResult {
 
   const reset = () => {
     setStatus("idle");
-    setSteps(initialSteps());
+    setSteps([]);
     setDocuments([]);
     setError(null);
     setZipBlob(null);

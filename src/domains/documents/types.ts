@@ -1,8 +1,7 @@
 import type { ApplicantData } from "@/domains/applicant/types";
 
 /** Идентификатор документа в комплекте. */
-export type DocumentId =
-  "anketa" | "lichnoe-delo" | "opis" | "raspiska" | "ekzamen-list" | "dogovor";
+export type DocumentId = string;
 
 /** Функция-генератор шаблона документа. */
 export type TemplateGenerator = (data: ApplicantData) => Promise<Uint8Array>;
