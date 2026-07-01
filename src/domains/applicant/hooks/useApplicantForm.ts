@@ -70,6 +70,76 @@ export const emptyApplicant = (): ApplicantData => ({
   },
 });
 
+/**
+ * Тестовые данные для проверки: несовершеннолетний абитуриент, платное обучение,
+ * специальность в рамках профессионалитета (с реальным бланком договора),
+ * представитель-Заказчик с полными данными. Экземпляр покрывает все документы.
+ */
+export const sampleApplicant = (): ApplicantData => ({
+  personal: {
+    lastName: "Иванов",
+    firstName: "Иван",
+    middleName: "Иванович",
+    birthDate: "2009-09-15",
+    birthPlace: "г. Волгоград",
+    gender: "male",
+    citizenship: "Российская Федерация",
+    settlementType: "city",
+    snils: "123-456-789 00",
+    phone: "+7 (999) 123-45-67",
+    email: "ivanov@mail.ru",
+  },
+  passport: {
+    series: "1820",
+    number: "654321",
+    issuedBy: "ГУ МВД России по Волгоградской области",
+    issuedDate: "2023-10-01",
+    divisionCode: "340-001",
+    registrationAddress: "г. Волгоград, ул. Мира, д. 1, кв. 10",
+    actualAddress: "",
+    sameAsRegistration: true,
+  },
+  parents: [
+    {
+      role: "mother",
+      fullName: "Иванова Мария Петровна",
+      phone: "+7 (999) 111-22-33",
+      workplace: "ООО «Ромашка», бухгалтер",
+      isContractCustomer: true,
+      birthDate: "1985-03-20",
+      birthPlace: "г. Волгоград",
+      snils: "111-222-333 44",
+      passportSeries: "1805",
+      passportNumber: "112233",
+      passportIssuedBy: "ОВД Центрального района г. Волгограда",
+      passportIssuedDate: "2005-04-15",
+      registrationAddress: "г. Волгоград, ул. Мира, д. 1, кв. 10",
+      email: "ivanova@mail.ru",
+    },
+  ],
+  previousEducation: {
+    institutionName: "МОУ СОШ № 1 г. Волгограда",
+    finishedYear: "2026",
+    documentType: "attestat",
+    documentSeries: "34 АБ",
+    documentNumber: "0001234",
+  },
+  educationConditions: {
+    specialty:
+      "Техническое обслуживание и ремонт двигателей, систем и агрегатов автомобилей",
+    specialtyCode: "23.02.07",
+    educationForm: "full-time",
+    baseEducation: "9",
+    foreignLanguage: "english",
+    fundingBasis: "contract",
+    professionalitet: true,
+    cipher: "ТО-25-001",
+    contractNumber: "Д-2026/001",
+    applicationDate: new Date().toISOString().slice(0, 10),
+    enrollmentYear: new Date().getFullYear(),
+  },
+});
+
 /** Загрузка черновика из localStorage (только в браузере). */
 function loadDraft(): ApplicantData | null {
   if (typeof window === "undefined") return null;

@@ -7,6 +7,7 @@ import {
   Circle,
   Download,
   Eraser,
+  FlaskConical,
   Loader2,
   PackageCheck,
   RotateCcw,
@@ -25,6 +26,8 @@ interface DocumentPackButtonProps {
   onContinue?: () => void;
   /** «Очистить поля»: сбросить введённые данные. */
   onClear?: () => void;
+  /** «Заполнить тестовыми данными»: для проверки. */
+  onFillTest?: () => void;
 }
 
 function StepIcon({ status }: { status: PackStep["status"] }) {
@@ -63,6 +66,7 @@ export function DocumentPackButton({
   onGenerated,
   onContinue,
   onClear,
+  onFillTest,
 }: DocumentPackButtonProps) {
   // handleSubmit сам запускает валидацию и показывает ошибки при невалидной форме.
   const { handleSubmit } = useFormContext<ApplicantData>();
@@ -85,6 +89,18 @@ export function DocumentPackButton({
             в ZIP-архиве.
           </p>
           <div className="flex flex-col gap-2 sm:flex-row">
+            {onFillTest && (
+              <Button
+                type="button"
+                size="lg"
+                variant="ghost"
+                className="w-full sm:w-auto"
+                onClick={onFillTest}
+              >
+                <FlaskConical className="h-5 w-5" />
+                Тестовые данные
+              </Button>
+            )}
             {onClear && (
               <Button
                 type="button"

@@ -1,12 +1,13 @@
 "use client";
 
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { ClipboardList } from "lucide-react";
 
 import { Field, FormSection } from "@/shared/components/FormSection";
 import { Input } from "@/shared/components/ui/input";
 import { SegmentedControl } from "@/shared/components/ui/segmented";
 import { Combobox } from "@/shared/components/ui/combobox";
+import { Badge } from "@/shared/components/ui/badge";
 import { maskYear } from "@/shared/lib/masks";
 import { findSpecialtyByName, useSpecialties } from "../data/specialties";
 import type { ApplicantData } from "../types";
@@ -32,6 +33,10 @@ export function EducationConditionsSection() {
   } = useFormContext<ApplicantData>();
   const e = errors.educationConditions;
   const specialties = useSpecialties();
+  const isProf = useWatch({
+    control,
+    name: "educationConditions.professionalitet",
+  });
 
   const specialtyOptions = specialties.map((s) => ({
     value: s.name,
@@ -76,6 +81,7 @@ export function EducationConditionsSection() {
               />
             )}
           />
+          {isProf && <Badge className="mt-1.5 w-fit">Профессионалитет</Badge>}
         </Field>
 
         <Field

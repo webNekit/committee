@@ -13,6 +13,7 @@ import {
 
 import {
   emptyApplicant,
+  sampleApplicant,
   useApplicantForm,
 } from "@/domains/applicant/hooks/useApplicantForm";
 import { EducationConditionsSection } from "@/domains/applicant/components/EducationConditionsSection";
@@ -53,6 +54,9 @@ export default function NewApplicantPage() {
       clearDraft();
     }
   };
+
+  // «Заполнить тестовыми данными»: для проверки генерации документов.
+  const handleFillTest = () => form.reset(sampleApplicant());
 
   return (
     <FormProvider {...form}>
@@ -130,6 +134,7 @@ export default function NewApplicantPage() {
               onGenerated={clearDraft}
               onContinue={handleContinue}
               onClear={handleClear}
+              onFillTest={handleFillTest}
             />
           </div>
         </div>
