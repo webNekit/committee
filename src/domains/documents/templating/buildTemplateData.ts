@@ -94,6 +94,26 @@ export function buildTemplateData(data: ApplicantData) {
     educationConditions.applicationDate,
   );
 
+  // Обучающийся (всегда абитуриент).
+  const student = {
+    fullName: fullName(data),
+    birthDate: formatDate(personal.birthDate),
+    birthPlace: personal.birthPlace,
+    snils: personal.snils,
+    passportSeries: passport.series,
+    passportNumber: passport.number,
+    passportSeriesNumber: `${passport.series} ${passport.number}`.trim(),
+    passportIssuedBy: passport.issuedBy,
+    passportIssuedDate: formatDate(passport.issuedDate),
+    registrationAddress: passport.registrationAddress,
+    phone: personal.phone,
+    email: personal.email || "",
+  };
+
+  // Заказчик по договору: совершеннолетний — сам; иначе — представитель.
+  const customer =
+    adult || !representative ? { role: "", ...student } : representative;
+
   return {
     // Общие
     today: today(),
@@ -171,6 +191,10 @@ export function buildTemplateData(data: ApplicantData) {
 
     // Заказчик по договору (для несовершеннолетнего — представитель).
     representative: representative ?? EMPTY_REPRESENTATIVE,
+
+    // Для договора: обучающийся и заказчик (адаптируется под совершеннолетие).
+    student,
+    customer,
   };
 }
 

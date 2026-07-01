@@ -4,7 +4,7 @@ import { generateLichnoeDelo } from "./templates/lichnoe-delo";
 import { generateOpis } from "./templates/opis";
 import { generateRaspiska } from "./templates/raspiska";
 import { generateEkzamenList } from "./templates/ekzamen-list";
-import { generateDogovor } from "./templates/dogovor";
+import { generateContract } from "./templating/contracts";
 import type { DocumentId, DocumentTemplate, GeneratedDocument } from "./types";
 
 /** Реестр всех шаблонов комплекта (6 документов). */
@@ -43,7 +43,7 @@ export const DOCUMENT_TEMPLATES: readonly DocumentTemplate[] = [
     id: "dogovor",
     title: "Договор об образовании",
     fileSuffix: "договор",
-    generate: generateDogovor,
+    generate: generateContract,
   },
 ] as const;
 

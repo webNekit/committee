@@ -7,6 +7,24 @@ import { buildTemplateData } from "./buildTemplateData";
 /** Разделители плейсхолдеров: {{ поле }}. */
 const DELIMITERS = { start: "{{", end: "}}" };
 
+/** Резолвинг точечных путей ({{customer.fullName}}) и текущего скоупа ({{.}}). */
+function resolvePath(scope: unknown, tag: string): unknown {
+  if (tag === ".") return scope;
+  return tag
+    .split(".")
+    .reduce<unknown>(
+      (acc, key) =>
+        acc && typeof acc === "object"
+          ? (acc as Record<string, unknown>)[key]
+          : undefined,
+      scope,
+    );
+}
+
+const dottedParser = (tag: string) => ({
+  get: (scope: unknown) => resolvePath(scope, tag),
+});
+
 /**
  * Заполняет Word-шаблон (.docx) данными абитуриента и возвращает готовый файл.
  * @param content содержимое шаблона (ArrayBuffer / Uint8Array / binary string)
@@ -20,6 +38,9 @@ export function renderDocxTemplate(
     paragraphLoop: true,
     linebreaks: true,
     delimiters: DELIMITERS,
+    parser: dottedParser,
+    // Пустые/отсутствующие значения → пустая строка (а не "undefined").
+    nullGetter: () => "",
   });
   doc.render(buildTemplateData(data));
   return doc.getZip().generate({ type: "uint8array" });
