@@ -20,6 +20,10 @@ export interface Specialty {
 export const BASE_SPECIALTIES = baseData as Specialty[];
 
 const STORAGE_KEY = "committee:specialties";
+const VERSION_KEY = "committee:specialties:version";
+// Версия каталога. Меняется при правке specialties.json — тогда устаревший
+// localStorage игнорируется и подгружается актуальный каталог из файла.
+const CATALOG_VERSION = "2026-07-02-brochure-27";
 
 let cache: Specialty[] | null = null;
 const listeners = new Set<() => void>();
@@ -31,6 +35,12 @@ function read(): Specialty[] {
     return cache;
   }
   try {
+    const ver = window.localStorage.getItem(VERSION_KEY);
+    // Устаревшая (или отсутствующая) версия — берём актуальный каталог из файла.
+    if (ver !== CATALOG_VERSION) {
+      cache = BASE_SPECIALTIES;
+      return cache;
+    }
     const raw = window.localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? (JSON.parse(raw) as Specialty[]) : null;
     cache = Array.isArray(parsed) && parsed.length ? parsed : BASE_SPECIALTIES;
@@ -44,6 +54,7 @@ function commit(list: Specialty[]) {
   cache = list;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    window.localStorage.setItem(VERSION_KEY, CATALOG_VERSION);
   } catch {
     // localStorage недоступен — изменения останутся только в памяти.
   }
@@ -92,6 +103,7 @@ export function resetSpecialties() {
   cache = BASE_SPECIALTIES;
   try {
     window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(VERSION_KEY);
   } catch {
     // игнорируем
   }
