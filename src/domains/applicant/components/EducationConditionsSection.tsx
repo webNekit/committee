@@ -40,8 +40,9 @@ export function EducationConditionsSection() {
 
   const specialtyOptions = specialties.map((s) => ({
     value: s.name,
-    label: `${s.code} — ${s.name}${s.professionalitet ? " ★" : ""}`,
+    label: `${s.code} — ${s.name}`,
     keywords: s.code,
+    badge: s.professionalitet ? "Профессионалитет" : undefined,
   }));
 
   return (

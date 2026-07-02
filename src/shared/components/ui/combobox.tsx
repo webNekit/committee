@@ -10,6 +10,8 @@ export interface ComboboxOption {
   label: string;
   /** Доп. текст для поиска (например, код специальности). */
   keywords?: string;
+  /** Небольшой бейдж справа от пункта (например, «Профессионалитет»). */
+  badge?: string;
 }
 
 interface ComboboxProps {
@@ -168,6 +170,11 @@ export function Combobox({
                   )}
                 />
                 <span className="truncate">{opt.label}</span>
+                {opt.badge && (
+                  <span className="ml-auto shrink-0 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
+                    {opt.badge}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
