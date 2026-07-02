@@ -120,6 +120,10 @@ export const previousEducationSchema = z.object({
   }),
   documentSeries: requiredString("Укажите серию документа"),
   documentNumber: requiredString("Укажите номер документа"),
+  documentDate: requiredString("Укажите дату выдачи документа").refine(
+    (v) => !Number.isNaN(Date.parse(v)),
+    "Некорректная дата",
+  ),
 });
 
 export const educationConditionsSchema = z.object({

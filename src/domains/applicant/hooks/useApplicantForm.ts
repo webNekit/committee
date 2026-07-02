@@ -54,6 +54,7 @@ export const emptyApplicant = (): ApplicantData => ({
     documentType: "attestat",
     documentSeries: "",
     documentNumber: "",
+    documentDate: "",
   },
   educationConditions: {
     specialty: "",
@@ -123,6 +124,7 @@ export const sampleApplicant = (): ApplicantData => ({
     documentType: "attestat",
     documentSeries: "34 АБ",
     documentNumber: "0001234",
+    documentDate: "2026-06-25",
   },
   educationConditions: {
     specialty:

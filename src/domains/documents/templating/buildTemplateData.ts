@@ -142,6 +142,8 @@ export function buildTemplateData(data: ApplicantData) {
       gender: genderLabel(personal.gender),
       citizenship: personal.citizenship,
       settlementType: SETTLEMENT_LABEL[personal.settlementType] ?? "",
+      cityBox: personal.settlementType === "city" ? "☑" : "☐",
+      ruralBox: personal.settlementType === "rural" ? "☑" : "☐",
       snils: personal.snils,
       phone: personal.phone,
       email: personal.email || "",
@@ -168,6 +170,7 @@ export function buildTemplateData(data: ApplicantData) {
       documentType: documentTypeLabel(previousEducation.documentType),
       documentSeries: previousEducation.documentSeries,
       documentNumber: previousEducation.documentNumber,
+      documentDate: formatDate(previousEducation.documentDate),
     },
 
     // Условия обучения

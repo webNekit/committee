@@ -53,6 +53,7 @@ export interface PreviousEducation {
   documentType: "attestat" | "diplom"; // Аттестат или диплом
   documentSeries: string; // Серия документа
   documentNumber: string; // Номер документа
+  documentDate: string; // Дата выдачи документа об образовании (ISO)
 }
 
 /** Условия обучения (специальность, форма, базовое образование и т.д.). */

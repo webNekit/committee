@@ -42,6 +42,7 @@ function sample(): ApplicantData {
       documentType: "attestat",
       documentSeries: "12 АБ",
       documentNumber: "0001234",
+      documentDate: "2026-06-25",
     },
     educationConditions: {
       specialty: "Информационные системы и программирование",

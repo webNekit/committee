@@ -92,6 +92,14 @@ export function EducationSection() {
             placeholder="0001234"
           />
         </Field>
+
+        <Field
+          label="Дата выдачи документа"
+          required
+          error={e?.documentDate?.message}
+        >
+          <Input type="date" {...register("previousEducation.documentDate")} />
+        </Field>
       </div>
     </FormSection>
   );
