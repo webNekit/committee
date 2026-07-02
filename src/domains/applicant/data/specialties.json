@@ -10,6 +10,11 @@
     "professionalitet": false
   },
   {
+    "code": "09.02.11",
+    "name": "Разработка и управление программным обеспечением",
+    "professionalitet": true
+  },
+  {
     "code": "10.02.05",
     "name": "Обеспечение информационной безопасности автоматизированных систем",
     "professionalitet": true
@@ -57,7 +62,7 @@
   },
   {
     "code": "23.02.07",
-    "name": "Техническое обслуживание и ремонт двигателей, систем и агрегатов автомобилей",
+    "name": "Техническое обслуживание и ремонт автотранспортных средств",
     "professionalitet": true
   },
   {
@@ -78,7 +83,7 @@
   {
     "code": "38.02.01",
     "name": "Экономика и бухгалтерский учёт (по отраслям)",
-    "professionalitet": false
+    "professionalitet": true
   },
   {
     "code": "38.02.02",
@@ -91,8 +96,12 @@
     "professionalitet": false
   },
   { "code": "38.02.06", "name": "Финансы", "professionalitet": false },
-  { "code": "38.02.07", "name": "Банковское дело", "professionalitet": false },
-  { "code": "40.02.04", "name": "Юриспруденция", "professionalitet": false },
+  {
+    "code": "38.02.07",
+    "name": "Банковское дело",
+    "professionalitet": true
+  },
+  { "code": "40.02.04", "name": "Юриспруденция", "professionalitet": true },
   {
     "code": "23.01.06",
     "name": "Машинист дорожных и строительных машин",
