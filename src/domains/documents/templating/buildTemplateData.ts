@@ -43,7 +43,7 @@ const FUNDING_LABEL: Record<string, string> = {
 };
 
 /** Совершеннолетний ли абитуриент на дату подачи заявления. */
-function isAdultAt(birthISO: string, atISO: string): boolean {
+export function isAdultAt(birthISO: string, atISO: string): boolean {
   const birth = new Date(birthISO);
   const at = new Date(atISO);
   if (Number.isNaN(birth.getTime()) || Number.isNaN(at.getTime())) return false;

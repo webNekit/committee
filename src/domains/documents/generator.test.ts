@@ -79,11 +79,30 @@ describe("buildFileName", () => {
 });
 
 describe("planPack", () => {
-  it("бюджет: заявление + 4 согласия (без договора)", () => {
-    const ids = planPack(sampleApplicant()).map((p) => p.id);
+  it("бюджет: заявление + 2 согласия (без договора)", () => {
+    const data = sampleApplicant();
+    data.educationConditions.fundingBasis = "budget";
+    const ids = planPack(data).map((p) => p.id);
     expect(ids).toContain("application");
     expect(ids).not.toContain("contract");
-    expect(ids.filter((i) => i.startsWith("consent"))).toHaveLength(4);
+    // 2 согласия (передача + обработка) — вариант по возрасту.
+    expect(ids.filter((i) => i.startsWith("consent"))).toHaveLength(2);
+  });
+
+  it("согласия выбираются по возрасту (совершеннолетний / представитель)", () => {
+    const minor = sampleApplicant();
+    minor.personal.birthDate = "2012-01-01"; // несовершеннолетний
+    const adult = sampleApplicant();
+    adult.personal.birthDate = "2000-01-01"; // совершеннолетний
+    // Разные наборы файлов согласий не пересекаются по варианту.
+    const minorTitles = planPack(minor)
+      .filter((p) => p.id.startsWith("consent"))
+      .map((p) => p.title);
+    const adultTitles = planPack(adult)
+      .filter((p) => p.id.startsWith("consent"))
+      .map((p) => p.title);
+    expect(minorTitles.some((t) => t.includes("представителя"))).toBe(true);
+    expect(adultTitles.some((t) => t.includes("представителя"))).toBe(false);
   });
 
   it("платно: добавляется договор", () => {

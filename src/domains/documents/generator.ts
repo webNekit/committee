@@ -1,32 +1,40 @@
 import type { ApplicantData } from "@/domains/applicant/types";
 import { generateContract } from "./templating/contracts";
+import { isAdultAt } from "./templating/buildTemplateData";
 import { renderTemplateFromUrl } from "./templating/renderTemplate";
 import type { GeneratedDocument } from "./types";
 
-/** Согласия — заполняются для всех абитуриентов. */
-const CONSENTS = [
-  {
-    id: "consent-pd",
-    title: "Согласие на обработку персональных данных",
-    fileSuffix: "согласие-обработка-ПД",
-    file: "consent-pd.docx",
-  },
-  {
-    id: "consent",
-    title: "Согласие на обработку персональных данных (расширенное)",
-    fileSuffix: "согласие",
-    file: "consent.docx",
-  },
+/**
+ * Согласия. Для каждого типа (передача ПД / обработка ПД) есть два бланка:
+ * для совершеннолетнего (подписывает сам) и для несовершеннолетнего
+ * (подписывает законный представитель). Генерируется нужный по возрасту.
+ */
+const CONSENTS_ADULT = [
   {
     id: "consent-transfer",
     title: "Согласие на передачу персональных данных",
     fileSuffix: "согласие-передача-ПД",
+    file: "consent-pd.docx",
+  },
+  {
+    id: "consent-process",
+    title: "Согласие на обработку персональных данных",
+    fileSuffix: "согласие-обработка-ПД",
+    file: "consent.docx",
+  },
+] as const;
+
+const CONSENTS_MINOR = [
+  {
+    id: "consent-transfer",
+    title: "Согласие представителя на передачу персональных данных",
+    fileSuffix: "согласие-передача-ПД",
     file: "consent-transfer.docx",
   },
   {
-    id: "consent-zp",
-    title: "Согласие (зарплатный проект)",
-    fileSuffix: "согласие-ЗП",
+    id: "consent-process",
+    title: "Согласие представителя на обработку персональных данных",
+    fileSuffix: "согласие-обработка-ПД",
     file: "consent-zp.docx",
   },
 ] as const;
@@ -71,7 +79,12 @@ export function planPack(data: ApplicantData): PackItem[] {
     });
   }
 
-  for (const c of CONSENTS) {
+  const adult = isAdultAt(
+    data.personal.birthDate,
+    data.educationConditions.applicationDate,
+  );
+  const consents = adult ? CONSENTS_ADULT : CONSENTS_MINOR;
+  for (const c of consents) {
     items.push({
       id: c.id,
       title: c.title,
