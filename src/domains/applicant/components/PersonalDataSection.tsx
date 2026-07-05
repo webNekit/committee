@@ -15,7 +15,6 @@ export function PersonalDataSection() {
   const {
     control,
     register,
-    setValue,
     formState: { errors },
   } = useFormContext<ApplicantData>();
   const e = errors.personal;
@@ -34,9 +33,6 @@ export function PersonalDataSection() {
                 onBlur={field.onBlur}
                 parts={["SURNAME"]}
                 placeholder="Иванов"
-                onGenderDetected={(g) =>
-                  setValue("personal.gender", g, { shouldValidate: true })
-                }
               />
             )}
           />
@@ -53,9 +49,6 @@ export function PersonalDataSection() {
                 onBlur={field.onBlur}
                 parts={["NAME"]}
                 placeholder="Иван"
-                onGenderDetected={(g) =>
-                  setValue("personal.gender", g, { shouldValidate: true })
-                }
               />
             )}
           />
@@ -94,25 +87,6 @@ export function PersonalDataSection() {
                 onBlur={field.onBlur}
                 cityOnly
                 placeholder="г. Волгоград"
-              />
-            )}
-          />
-        </Field>
-      </div>
-
-      <div className="mt-4">
-        <Field label="Пол" required error={e?.gender?.message}>
-          <Controller
-            control={control}
-            name="personal.gender"
-            render={({ field }) => (
-              <SegmentedControl
-                value={field.value}
-                onChange={field.onChange}
-                options={[
-                  { value: "male", label: "Мужской" },
-                  { value: "female", label: "Женский" },
-                ]}
               />
             )}
           />

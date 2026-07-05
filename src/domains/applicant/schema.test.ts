@@ -17,7 +17,6 @@ function validApplicant(): ApplicantData {
       middleName: "Иванович",
       birthDate: "2008-05-01",
       birthPlace: "г. Волгоград",
-      gender: "male",
       citizenship: "Российская Федерация",
       settlementType: "city",
       snils: "123-456-789 00",
@@ -29,23 +28,18 @@ function validApplicant(): ApplicantData {
       number: "567890",
       issuedBy: "ГУ МВД",
       issuedDate: "2022-06-01",
-      divisionCode: "340-001",
       registrationAddress: "г. Волгоград, ул. Мира, 1",
-      actualAddress: "",
-      sameAsRegistration: true,
     },
     parents: [
       {
         role: "mother",
         fullName: "Иванова Мария Петровна",
         phone: "+7 (999) 000-11-22",
-        workplace: "",
       },
     ],
     previousEducation: {
       institutionName: "МОУ СОШ № 1",
       finishedYear: "2024",
-      documentType: "attestat",
       documentSeries: "12 АБ",
       documentNumber: "0001234",
       documentDate: "2026-06-25",
@@ -58,10 +52,7 @@ function validApplicant(): ApplicantData {
       foreignLanguage: "english",
       fundingBasis: "budget",
       professionalitet: false,
-      cipher: "ИС-25-001",
-      contractNumber: "",
       applicationDate: "2026-06-20",
-      enrollmentYear: 2026,
     },
   };
 }
@@ -105,25 +96,11 @@ describe("personalDataSchema — граничные случаи", () => {
   });
 });
 
-describe("passportDataSchema — фактический адрес", () => {
+describe("passportDataSchema", () => {
   const base = validApplicant().passport;
 
-  it("при sameAsRegistration=false требует фактический адрес", () => {
-    const r = passportDataSchema.safeParse({
-      ...base,
-      sameAsRegistration: false,
-      actualAddress: "",
-    });
-    expect(r.success).toBe(false);
-  });
-
-  it("при sameAsRegistration=false с адресом — валидно", () => {
-    const r = passportDataSchema.safeParse({
-      ...base,
-      sameAsRegistration: false,
-      actualAddress: "г. Волжский, ул. Ленина, 2",
-    });
-    expect(r.success).toBe(true);
+  it("полностью валидные паспортные данные проходят", () => {
+    expect(passportDataSchema.safeParse(base).success).toBe(true);
   });
 
   it("серия из 3 цифр не проходит", () => {

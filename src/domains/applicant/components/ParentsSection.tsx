@@ -23,8 +23,6 @@ import {
 } from "@/shared/lib/masks";
 import type { ApplicantData } from "../types";
 
-const NOT_WORKING = "Не работает";
-
 const ROLE_OPTIONS = [
   { value: "mother", label: "Мать" },
   { value: "father", label: "Отец" },
@@ -127,42 +125,6 @@ function ParentCard({
                 placeholder="Иванова Мария Петровна"
               />
             )}
-          />
-        </Field>
-
-        <Field
-          label="Место работы"
-          error={e?.workplace?.message}
-          className="sm:col-span-2"
-        >
-          <Controller
-            control={control}
-            name={`parents.${index}.workplace`}
-            render={({ field }) => {
-              const notWorking = field.value === NOT_WORKING;
-              return (
-                <div className="space-y-2">
-                  <Input
-                    value={notWorking ? "" : (field.value ?? "")}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    disabled={notWorking}
-                    placeholder={
-                      notWorking ? "Не работает" : "ООО «Ромашка», бухгалтер"
-                    }
-                  />
-                  <label className="flex w-fit cursor-pointer items-center gap-2 text-sm text-muted-foreground">
-                    <Checkbox
-                      checked={notWorking}
-                      onCheckedChange={(checked) =>
-                        field.onChange(checked === true ? NOT_WORKING : "")
-                      }
-                    />
-                    Не работает
-                  </label>
-                </div>
-              );
-            }}
           />
         </Field>
 
@@ -357,14 +319,7 @@ export function ParentsSection() {
         {fields.length < 2 && (
           <button
             type="button"
-            onClick={() =>
-              append({
-                role: "father",
-                fullName: "",
-                phone: "",
-                workplace: "",
-              })
-            }
+            onClick={() => append({ role: "father", fullName: "", phone: "" })}
             className="flex min-h-[140px] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-colors hover:border-primary hover:bg-accent/50 hover:text-foreground"
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-current">

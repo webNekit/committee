@@ -37,7 +37,7 @@ export async function generateDogovor(
   data: ApplicantData,
 ): Promise<Uint8Array> {
   const { educationConditions } = data;
-  const isPaid = Boolean(educationConditions.contractNumber);
+  const isPaid = educationConditions.fundingBasis === "contract";
 
   const children: Paragraph[] = [
     new Paragraph({
@@ -48,12 +48,7 @@ export async function generateDogovor(
     docTitle("ДОГОВОР ОБ ОБРАЗОВАНИИ"),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [
-        normalText(
-          `№ ${educationConditions.contractNumber || "_________"}`,
-          22,
-        ),
-      ],
+      children: [normalText("№ _________", 22)],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -90,7 +85,7 @@ export async function generateDogovor(
 
     clauseTitle("3. Срок обучения"),
     para(
-      `3.1. Срок освоения образовательной программы устанавливается учебным планом. Год поступления: ${educationConditions.enrollmentYear}.`,
+      `3.1. Срок освоения образовательной программы устанавливается учебным планом.`,
     ),
 
     clauseTitle("4. Стоимость обучения и порядок оплаты"),

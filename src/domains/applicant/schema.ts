@@ -24,9 +24,6 @@ export const personalDataSchema = z.object({
     "Некорректная дата рождения",
   ),
   birthPlace: requiredString("Укажите место рождения"),
-  gender: z.enum(["male", "female"], {
-    errorMap: () => ({ message: "Выберите пол" }),
-  }),
   citizenship: requiredString("Укажите гражданство"),
   settlementType: z.enum(["city", "rural"], {
     errorMap: () => ({ message: "Выберите тип населённого пункта" }),
@@ -47,39 +44,22 @@ export const personalDataSchema = z.object({
     .or(z.literal("")),
 });
 
-export const passportDataSchema = z
-  .object({
-    series: requiredString("Укажите серию паспорта").regex(
-      /^\d{4}$/,
-      "Серия — 4 цифры",
-    ),
-    number: requiredString("Укажите номер паспорта").regex(
-      /^\d{6}$/,
-      "Номер — 6 цифр",
-    ),
-    issuedBy: requiredString("Укажите, кем выдан паспорт"),
-    issuedDate: requiredString("Укажите дату выдачи").refine(
-      (v) => !Number.isNaN(Date.parse(v)),
-      "Некорректная дата выдачи",
-    ),
-    divisionCode: requiredString("Укажите код подразделения").regex(
-      /^\d{3}-\d{3}$/,
-      "Код подразделения в формате 123-456",
-    ),
-    registrationAddress: requiredString("Укажите адрес регистрации"),
-    actualAddress: z.string().trim().optional().or(z.literal("")),
-    sameAsRegistration: z.boolean(),
-  })
-  .refine(
-    (data) =>
-      data.sameAsRegistration ||
-      (data.actualAddress && data.actualAddress.length > 0),
-    {
-      message:
-        "Укажите фактический адрес или отметьте совпадение с регистрацией",
-      path: ["actualAddress"],
-    },
-  );
+export const passportDataSchema = z.object({
+  series: requiredString("Укажите серию паспорта").regex(
+    /^\d{4}$/,
+    "Серия — 4 цифры",
+  ),
+  number: requiredString("Укажите номер паспорта").regex(
+    /^\d{6}$/,
+    "Номер — 6 цифр",
+  ),
+  issuedBy: requiredString("Укажите, кем выдан паспорт"),
+  issuedDate: requiredString("Укажите дату выдачи").refine(
+    (v) => !Number.isNaN(Date.parse(v)),
+    "Некорректная дата выдачи",
+  ),
+  registrationAddress: requiredString("Укажите адрес регистрации"),
+});
 
 export const parentDataSchema = z.object({
   role: z.enum(["mother", "father", "guardian"], {
@@ -90,7 +70,6 @@ export const parentDataSchema = z.object({
     /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
     "Телефон в формате +7 (999) 123-45-67",
   ),
-  workplace: z.string().trim().optional().or(z.literal("")),
   // Полные данные представителя (Заказчик по договору) — необязательны.
   isContractCustomer: z.boolean().optional(),
   birthDate: z.string().trim().optional().or(z.literal("")),
@@ -115,9 +94,6 @@ export const previousEducationSchema = z.object({
     /^\d{4}$/,
     "Год окончания — 4 цифры",
   ),
-  documentType: z.enum(["attestat", "diplom"], {
-    errorMap: () => ({ message: "Выберите тип документа" }),
-  }),
   documentSeries: requiredString("Укажите серию документа"),
   documentNumber: requiredString("Укажите номер документа"),
   documentDate: requiredString("Укажите дату выдачи документа").refine(
@@ -142,17 +118,10 @@ export const educationConditionsSchema = z.object({
     errorMap: () => ({ message: "Выберите основание поступления" }),
   }),
   professionalitet: z.boolean(),
-  cipher: requiredString("Укажите шифр личного дела"),
-  contractNumber: z.string().trim().optional().or(z.literal("")),
   applicationDate: requiredString("Укажите дату подачи заявления").refine(
     (v) => !Number.isNaN(Date.parse(v)),
     "Некорректная дата",
   ),
-  enrollmentYear: z
-    .number({ invalid_type_error: "Укажите год поступления" })
-    .int()
-    .min(2000, "Год поступления некорректен")
-    .max(2100, "Год поступления некорректен"),
 });
 
 export const applicantSchema = z.object({

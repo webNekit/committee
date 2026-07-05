@@ -8,7 +8,6 @@ import { Input } from "@/shared/components/ui/input";
 import { SegmentedControl } from "@/shared/components/ui/segmented";
 import { Combobox } from "@/shared/components/ui/combobox";
 import { Badge } from "@/shared/components/ui/badge";
-import { maskYear } from "@/shared/lib/masks";
 import { findSpecialtyByName, useSpecialties } from "../data/specialties";
 import type { ApplicantData } from "../types";
 
@@ -99,7 +98,7 @@ export function EducationConditionsSection() {
         </Field>
       </div>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-3">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <Field
           label="Форма обучения"
           required
@@ -135,28 +134,6 @@ export function EducationConditionsSection() {
                 onChange={field.onChange}
                 placeholder="Язык"
                 searchPlaceholder="Поиск…"
-              />
-            )}
-          />
-        </Field>
-
-        <Field
-          label="Год поступления"
-          required
-          error={e?.enrollmentYear?.message}
-        >
-          <Controller
-            control={control}
-            name="educationConditions.enrollmentYear"
-            render={({ field }) => (
-              <Input
-                value={String(field.value ?? "")}
-                onBlur={field.onBlur}
-                onChange={(ev) =>
-                  field.onChange(Number(maskYear(ev.target.value)) || 0)
-                }
-                placeholder="2026"
-                inputMode="numeric"
               />
             )}
           />
@@ -216,22 +193,6 @@ export function EducationConditionsSection() {
           <Input
             type="date"
             {...register("educationConditions.applicationDate")}
-          />
-        </Field>
-      </div>
-
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <Field label="Шифр личного дела" required error={e?.cipher?.message}>
-          <Input
-            {...register("educationConditions.cipher")}
-            placeholder="ИС-25-001"
-          />
-        </Field>
-
-        <Field label="Номер договора" error={e?.contractNumber?.message}>
-          <Input
-            {...register("educationConditions.contractNumber")}
-            placeholder="Д-2026/001 (если платно)"
           />
         </Field>
       </div>

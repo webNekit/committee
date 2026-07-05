@@ -5,13 +5,7 @@ import { GraduationCap } from "lucide-react";
 
 import { Field, FormSection } from "@/shared/components/FormSection";
 import { Input } from "@/shared/components/ui/input";
-import { Combobox } from "@/shared/components/ui/combobox";
 import { maskYear } from "@/shared/lib/masks";
-
-const DOCUMENT_TYPES = [
-  { value: "attestat", label: "Аттестат" },
-  { value: "diplom", label: "Диплом" },
-];
 import type { ApplicantData } from "../types";
 
 export function EducationSection() {
@@ -51,21 +45,6 @@ export function EducationSection() {
                 onChange={(ev) => field.onChange(maskYear(ev.target.value))}
                 placeholder="2026"
                 inputMode="numeric"
-              />
-            )}
-          />
-        </Field>
-
-        <Field label="Тип документа" required error={e?.documentType?.message}>
-          <Controller
-            control={control}
-            name="previousEducation.documentType"
-            render={({ field }) => (
-              <Combobox
-                options={DOCUMENT_TYPES}
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Выберите тип"
               />
             )}
           />

@@ -6,10 +6,8 @@ import {
   COLLEGE_NAME,
   COLLEGE_NAME_FULL,
   COLLEGE_PHONE,
-  documentTypeLabel,
   educationFormLabel,
   fullName,
-  genderLabel,
   languageLabel,
   roleLabel,
 } from "../utils/docx-helpers";
@@ -65,7 +63,6 @@ export function buildTemplateData(data: ApplicantData) {
     role: roleLabel(p.role),
     fullName: p.fullName,
     phone: p.phone,
-    workplace: p.workplace || "",
   }));
 
   // Заказчик по договору = отмеченный представитель или первый.
@@ -139,7 +136,6 @@ export function buildTemplateData(data: ApplicantData) {
       birthDate: formatDate(personal.birthDate),
       birthDateLong: formatDateLong(personal.birthDate),
       birthPlace: personal.birthPlace,
-      gender: genderLabel(personal.gender),
       citizenship: personal.citizenship,
       settlementType: SETTLEMENT_LABEL[personal.settlementType] ?? "",
       cityBox: personal.settlementType === "city" ? "☑" : "☐",
@@ -156,18 +152,13 @@ export function buildTemplateData(data: ApplicantData) {
       seriesNumber: `${passport.series} ${passport.number}`.trim(),
       issuedBy: passport.issuedBy,
       issuedDate: formatDate(passport.issuedDate),
-      divisionCode: passport.divisionCode,
       registrationAddress: passport.registrationAddress,
-      actualAddress: passport.sameAsRegistration
-        ? passport.registrationAddress
-        : passport.actualAddress,
     },
 
     // Предыдущее образование
     education: {
       institutionName: previousEducation.institutionName,
       finishedYear: previousEducation.finishedYear,
-      documentType: documentTypeLabel(previousEducation.documentType),
       documentSeries: previousEducation.documentSeries,
       documentNumber: previousEducation.documentNumber,
       documentDate: formatDate(previousEducation.documentDate),
@@ -180,9 +171,6 @@ export function buildTemplateData(data: ApplicantData) {
       educationForm: educationFormLabel(educationConditions.educationForm),
       baseEducation: educationConditions.baseEducation,
       foreignLanguage: languageLabel(educationConditions.foreignLanguage),
-      cipher: educationConditions.cipher,
-      contractNumber: educationConditions.contractNumber || "",
-      enrollmentYear: String(educationConditions.enrollmentYear),
       fundingBasis: FUNDING_LABEL[educationConditions.fundingBasis] ?? "бюджет",
       professionalitet: educationConditions.professionalitet,
     },

@@ -14,7 +14,6 @@ function sampleApplicant(): ApplicantData {
       middleName: "Иванович",
       birthDate: "2008-05-01",
       birthPlace: "г. Волгоград",
-      gender: "male",
       citizenship: "Российская Федерация",
       settlementType: "city",
       snils: "123-456-789 00",
@@ -26,23 +25,18 @@ function sampleApplicant(): ApplicantData {
       number: "567890",
       issuedBy: "ГУ МВД",
       issuedDate: "2022-06-01",
-      divisionCode: "340-001",
       registrationAddress: "г. Волгоград, ул. Мира, 1",
-      actualAddress: "",
-      sameAsRegistration: true,
     },
     parents: [
       {
         role: "mother",
         fullName: "Иванова Мария Петровна",
         phone: "+7 (999) 000-11-22",
-        workplace: "ООО Ромашка",
       },
     ],
     previousEducation: {
       institutionName: "МОУ СОШ № 1",
       finishedYear: "2024",
-      documentType: "attestat",
       documentSeries: "12 АБ",
       documentNumber: "0001234",
       documentDate: "2026-06-25",
@@ -55,10 +49,7 @@ function sampleApplicant(): ApplicantData {
       foreignLanguage: "english",
       fundingBasis: "budget",
       professionalitet: false,
-      cipher: "Ю-25-001",
-      contractNumber: "",
       applicationDate: "2026-06-20",
-      enrollmentYear: 2026,
     },
   };
 }
