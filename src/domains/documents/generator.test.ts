@@ -49,6 +49,7 @@ function sampleApplicant(): ApplicantData {
       foreignLanguage: "english",
       fundingBasis: "budget",
       professionalitet: false,
+      needsDormitory: false,
       applicationDate: "2026-06-20",
     },
   };

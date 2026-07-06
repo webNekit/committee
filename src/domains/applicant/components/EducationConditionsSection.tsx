@@ -196,6 +196,25 @@ export function EducationConditionsSection() {
           />
         </Field>
       </div>
+
+      <div className="mt-4">
+        <Field label="Нуждается в общежитии" error={e?.needsDormitory?.message}>
+          <Controller
+            control={control}
+            name="educationConditions.needsDormitory"
+            render={({ field }) => (
+              <SegmentedControl
+                value={field.value ? "yes" : "no"}
+                onChange={(v) => field.onChange(v === "yes")}
+                options={[
+                  { value: "no", label: "Нет" },
+                  { value: "yes", label: "Да" },
+                ]}
+              />
+            )}
+          />
+        </Field>
+      </div>
     </FormSection>
   );
 }

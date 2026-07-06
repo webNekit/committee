@@ -138,8 +138,9 @@ export function buildTemplateData(data: ApplicantData) {
       birthPlace: personal.birthPlace,
       citizenship: personal.citizenship,
       settlementType: SETTLEMENT_LABEL[personal.settlementType] ?? "",
-      cityBox: personal.settlementType === "city" ? "☑" : "☐",
-      ruralBox: personal.settlementType === "rural" ? "☑" : "☐",
+      // Галочка ✓ (компактная, без клиппинга) для выбранного, пустой квадрат — для нет.
+      cityBox: personal.settlementType === "city" ? "✓" : "□",
+      ruralBox: personal.settlementType === "rural" ? "✓" : "□",
       snils: personal.snils,
       phone: personal.phone,
       email: personal.email || "",
@@ -173,6 +174,7 @@ export function buildTemplateData(data: ApplicantData) {
       foreignLanguage: languageLabel(educationConditions.foreignLanguage),
       fundingBasis: FUNDING_LABEL[educationConditions.fundingBasis] ?? "бюджет",
       professionalitet: educationConditions.professionalitet,
+      dormAnswer: educationConditions.needsDormitory ? "да" : "нет",
     },
 
     // Родители: массив (для циклов {#parents}…{/parents}) и по индексу.

@@ -59,6 +59,7 @@ export const emptyApplicant = (): ApplicantData => ({
     foreignLanguage: "english",
     fundingBasis: "budget",
     professionalitet: false,
+    needsDormitory: false,
     applicationDate: new Date().toISOString().slice(0, 10),
   },
 });
@@ -121,6 +122,7 @@ export const sampleApplicant = (): ApplicantData => ({
     foreignLanguage: "english",
     fundingBasis: "contract",
     professionalitet: true,
+    needsDormitory: false,
     applicationDate: new Date().toISOString().slice(0, 10),
   },
 });

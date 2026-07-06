@@ -118,6 +118,7 @@ export const educationConditionsSchema = z.object({
     errorMap: () => ({ message: "Выберите основание поступления" }),
   }),
   professionalitet: z.boolean(),
+  needsDormitory: z.boolean(),
   applicationDate: requiredString("Укажите дату подачи заявления").refine(
     (v) => !Number.isNaN(Date.parse(v)),
     "Некорректная дата",

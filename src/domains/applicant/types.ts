@@ -59,6 +59,7 @@ export interface EducationConditions {
   foreignLanguage: "english" | "german" | "french"; // Иностранный язык
   fundingBasis: "budget" | "contract"; // Основание: бюджет / договор (платно)
   professionalitet: boolean; // Специальность в рамках ФП «Профессионалитет»
+  needsDormitory: boolean; // Нуждается в предоставлении общежития
   applicationDate: string; // Дата подачи заявления (ISO)
 }
 
